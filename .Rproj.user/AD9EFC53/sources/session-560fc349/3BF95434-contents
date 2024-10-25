@@ -1,0 +1,14 @@
+---
+title: "Question1"
+author: "Rebecca Chang"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+1.  What do you imagine is the reason for log-transforming the protein levels in `biomarker-raw.csv`? (Hint: look at the distribution of raw values for a sample of proteins.)
+
+    The reason for log-transforming the protein levels in `biomarker-raw.csv` is likely due to
