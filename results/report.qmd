@@ -30,8 +30,6 @@ library(modelr)
 
 ## Abstract
 
-Write a brief one-paragraph abstract that describes the contents of your write-up.
-
 ## Dataset
 
 The data for this study were obtained from a cohort of 154 male pediatric subjects, including 76 with Autism Spectrum Disorder (ASD) and 78 typically developing (TD) boys. Serum samples were collected and analyzed using the SomaLogic SOMAScan platform, which measures the levels of 1,317 proteins. After quality control, 1,125 proteins were analyzed. The primary variables measured in this study include demographic information such as age, ethnicity, and co-morbid conditions. Other variables include the Autism Diagnostic Observation Schedule (ADOS) scores for ASD severity based on clinical assessment. Data preprocessing involved normalization and outlier handling. The protein abundance data were log10 transformed and z-transformed. Outliers were clipped to a specific range to mitigate their impact on analysis.
