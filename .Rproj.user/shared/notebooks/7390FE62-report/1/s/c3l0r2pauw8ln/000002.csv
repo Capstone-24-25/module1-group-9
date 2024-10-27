@@ -1,9 +1,0 @@
-"0","graph LR
-    A[Start] --> B{Process 1}
-    B --> C{Decision}
-    C --> D{Process 2}
-    C --> E{Process 3}
-    D --> F{End}
-    E --> F"
-"2","/bin/sh: mermaid: command not found
-"
