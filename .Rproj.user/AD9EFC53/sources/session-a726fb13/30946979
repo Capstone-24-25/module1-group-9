@@ -1,0 +1,26 @@
+{
+    "id": "30946979",
+    "path": "~/PSTAT 197/module1-group-9/data/biomarker-raw.csv",
+    "project_path": "data/biomarker-raw.csv",
+    "type": "text",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1729984383967.0,
+    "source_on_save": false,
+    "relative_order": 6,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "0,105",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1729723608,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1729723608,
+    "read_only": false,
+    "read_only_alternatives": []
+}

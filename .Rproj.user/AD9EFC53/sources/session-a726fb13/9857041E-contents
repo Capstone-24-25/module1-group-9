@@ -1,0 +1,358 @@
+---
+title: "Analysis of Class Survey Data"
+subtitle: ""
+author: "Rebecca Chang, Valerie De La Fuente, Tess Ivinjack"
+date: 10-18-24
+published-title: "Updated"
+editor: visual
+format: html
+code-copy: true
+execute:
+  message: false
+  warning: false
+  echo: false
+  cache: true
+---
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(readr)
+library(stringr)
+library(ggpubr)  
+library(stats)
+background <- read.csv("../data/background-clean.csv")
+interest <- read.csv("../data/interest-clean.csv")
+survey <- read.csv("../data/survey-metadata.csv")
+```
+
+## Executive summary
+
+For this project, we studied the relationship between upper division courses and the comfort level with statistics and probability, mathematics, and programming of students in PSTAT 197A who responded to the intake survey. We used box plots to visualize the relationship, and found that students who took 6-8 upper division courses had the highest comfort level across all subjects. We took our study a step further by employing t-tests to compare comfort level of students who took 6-8 upper division courses vs. 9+ upper division courses. Similarly, we ran t-tests to compare comfort level of students who took 3-5 upper division courses vs. 9+ upper division courses. For both tests, we found that there is no difference across those technical skills. We also examined how programming language preferences or research experience impacts students' interest in different domains and areas. We discovered that Python was the most preferred programming language, but the average number of domains or areas of interest were roughly the same for all groups. On the other hand, among the top few most popular domains and areas of interest, Python was the clear preferred language. Prior research experience also seemed to play a role in a student having more domains interests, although this was less obvious for areas of interest.
+
+## Data description
+
+Three datasets were provided to us: `background-clean.csv`, `interest-clean.csv`, and `survey-metadata.csv`. These data were obtained by performing a survey given to students who were accepted into the PSTAT 197A Capstone course. Measurements included students' self reported experience with data science subjects such as comfort and proficiency with mathematics, statistics, and programming, as well as how many and what upper division courses they've taken. There was also data collected on what domains and areas students are interested in learning more about whether that is a topic related to data science or a field that they would like to gain more knowledge and experience in. There were 43 total responses recorded which may include a few students who did not enroll, but does not include several students who did enroll. Of these 43 students, all were senior-standing students with the exception of two juniors, and there were 18 females and 25 males. The survey had a total of 26 Asians, 11 Caucasians, 1 African American, 3 multiracial, and 2 people who preferred not to say.
+
+## Questions of interest
+
+We sought to understand the correlations between students' upper-division coursework and their comfort level across different subjects. We also wanted to understand if students' previous experience in coding or research experience made a difference in their interest in various domains and areas. These curiosities led us to answer the following questions:
+
+1.  What is the relationship between the total number of upper division courses taken in statistics as well as comfort level across each of the subjects of probability, mathematics, and programming?
+2.  How is interest in different domains and areas affected by various factors such as programming language preferences and research experience?
+
+## Findings
+
+### Question 1
+
+```{r}
+# Change Data to Long Format
+updated_data <- background %>%
+  select(response.id, math.comf, stat.comf, prog.comf) %>%
+  pivot_longer(cols = c(math.comf, stat.comf, prog.comf), names_to = "subject", values_to = "comfort_level")
+
+# Comparing comfort levels across subjects
+ggplot(updated_data, aes(x = subject, y = comfort_level, fill = subject)) +
+  geom_boxplot() +
+  labs(title = "Comfort Levels Across Subjects",
+       x = "Subject",
+       y = "Comfort Level") +
+  theme_minimal()
+```
+
+In order to answer, "What is the relationship between the total number of upper division courses in statistics and probability, mathematics, and programming and comfort level across those three individual subjects?" it is important to examine an initial comparison of comfort level across all subjects. All subjects have the same median comfort level of 4. Box plots `math.comf` and `stat.comf` have an upper limit IQR equal to the upper limit of comfort level. In box plot `prog.comf`, no upper IQR indicates no variability above the median.
+
+```{r}
+count_data <- background %>% count(math.comf, updv.num)
+ggplot(count_data, aes(x = math.comf, y = updv.num, fill = updv.num)) + geom_boxplot() + theme_minimal() + labs(title = "Total Upper Division Courses Taken and Math Comfortability", x = "Math Comfortability", y = "Number of Upper Division Courses ")
+```
+
+```{r}
+count_data <- background %>% count(stat.comf, updv.num)
+ggplot(count_data, aes(x = stat.comf, y = updv.num, fill = updv.num)) + geom_boxplot() + theme_minimal() + labs(title = "Total Upper Division Courses Taken and Statistics Comfortability", x = "Statistics Comfortability", y = "Number of Upper Division Courses ")
+```
+
+```{r}
+count_data <- background %>% count(prog.comf, updv.num)
+ggplot(count_data, aes(x = prog.comf, y = updv.num, fill = updv.num)) + geom_boxplot() + theme_minimal() + labs(title = "Total Upper Division Courses Taken and Programming Comfortability", x = "Programming Comfortability", y = "Number of Upper Division Courses ")
+```
+
+After plotting the relationship between comfort level of each subject and the number of upper division courses taken, there was a consistent pattern in highest comfort level across all subjects with students that took 6-8 upper division courses. Surprisingly, students who took more than 9 upper division courses did not show a higher comfort level. However, this data could be skewed as it is likely more students took 6-8 upper division courses rather than 9+.
+
+As a follow up to test our hypothesis, we explored the question: Is there a difference in comfort level with probability and statistics, mathematics, and programming between students who have completed 6-8 upper division courses and students who have completed 9+ upper division courses?
+
+```{r}
+# Filtering the dataset for students with 6-8 and 9+ upper-division courses completed
+new_data <- subset(background, updv.num %in% c("6-8","9+"))
+
+# Using uppder division courses as a factor
+new_data$updv.num <- as.factor(new_data$updv.num)
+
+# T-test for math comfort level between 6-8 and 9+ upper-division courses completed
+math_t_test <- t.test(math.comf ~ updv.num, new_data)
+print(math_t_test)
+```
+
+We are testing our null hypothesis that there is no difference in comfort level in mathematics between the group with 6-8 upper division courses completed and the group with 9+ upper division courses completed. Due to a large p-value of 0.536, we fail to reject the null. Thus, we can conclude that there is indeed no difference between in comfort level in math between the two groups.
+
+```{r}
+# T-test for programming comfort level between 6-8 and 9+ upper-division courses completed
+prog_t_test <- t.test(prog.comf ~ updv.num, new_data)
+print(prog_t_test)
+```
+
+We are testing our null hypothesis that there is no difference in comfort level in programming between the group with 6-8 upper division courses completed and the group with 9+ upper division courses completed. Due to a large p-value of 0.6494, we fail to reject the null. Thus, we can conclude that there is indeed no difference between in comfort level in programming between the two groups.
+
+```{r}
+# T-test for statistics comfort level between 6-8 and 9+ upper-division courses completed
+stat_t_test <- t.test(stat.comf ~ updv.num, new_data)
+print(stat_t_test)
+```
+
+We are testing our null hypothesis that there is no difference in comfort level in statistics between the group with 6-8 upper division courses completed and the group with 9+ upper division courses completed. Due to a large p-value of 0.4542, we fail to reject the null. Thus, we can conclude that there is indeed no difference between in comfort level in statistics between the two groups.
+
+Overall, we have found that there is no difference in comfort level with technical skills between students with 6-8 upper division courses completed and students with 9+ upper division courses completed.
+
+We will reevaluate our question and now consider the difference in comfort level with probability and statistics, mathematics, and programming between students who have completed 3-5 upper division courses and students who have completed 9+ upper division courses.
+
+```{r}
+# Filtering the dataset for students with 3-5 and 9+ upper-division courses completed
+filtered_data <- subset(background, updv.num %in% c("3-5","9+"))
+
+# Using uppder division courses as a factor
+filtered_data$updv.num <- as.factor(filtered_data$updv.num)
+
+# T-test for math comfort level between 3-5 and 9+ upper-division courses completed
+math_t_test <- t.test(math.comf ~ updv.num, filtered_data)
+print(math_t_test)
+```
+
+We are testing our null hypothesis that there is no difference in comfort level in mathematics between the group with 3-5 upper division courses completed and the group with 9+ upper division courses completed. Due to a large p-value of 0.5481, we fail to reject the null. Thus, we can conclude that there is indeed no difference between in comfort level in math between the two groups.
+
+```{r}
+# T-test for programming comfort level between 3-5 and 9+ upper-division courses completed
+prog_t_test <- t.test(prog.comf ~ updv.num, filtered_data)
+print(prog_t_test)
+```
+
+We are testing our null hypothesis that there is no difference in comfort level in programming between the group with 3-5 upper division courses completed and the group with 9+ upper division courses completed. Due to a large p-value of 0.6631, we fail to reject the null. Thus, we can conclude that there is indeed no difference between in comfort level in programming between the two groups.
+
+```{r}
+# T-test for statistics comfort level between 3-5 and 9+ upper-division courses completed
+stat_t_test <- t.test(stat.comf ~ updv.num, filtered_data)
+print(stat_t_test)
+```
+
+We are testing our null hypothesis that there is no difference in comfort level in probability and statistics between the group with 6-8 upper division courses completed and the group with 9+ upper division courses completed. Due to a large p-value of 0.5345, we fail to reject the null. Thus, we can conclude that there is indeed no difference between in comfort level in statistics between the two groups.
+
+Overall, we have found that there is no difference in comfort level with technical skills between students with 3-5 upper division courses completed and students with 9+ upper division courses completed. When combining both questions, we can conclude that students who have completed 9+ upper division courses and have completed 3-5 or 6-8 upper division courses have no difference in technical skills.
+
+This could be due to a variety of reasons. For example, after a certain number of courses, students may reach a learning plateau where they feel confident in their technical abilities and no longer see major gains in their comfort level, even if they take more courses. This could explain why students with 9+ courses don't show a significant difference compared to those with 3-5 courses. Additionally, upper division courses often overlap in concepts, so by the time students have completed 3-5 courses or 6-8 courses, they might have already developed a strong foundation in key technical skills. Additional courses may reinforce those skills but may not lead to a significant increase in perceived comfort.
+
+### Question 2
+
+```{r}
+# Merge background and interest datasets
+merged_df <- inner_join(background, interest, by = "response.id")
+
+#unique(merged_df$lang)
+
+# Filter for only 3 lang options
+filtered_df <- merged_df %>%
+  filter(lang %in% c("Python", "R", "No preference"))
+#unique(filtered_df$lang)
+
+# Bar graph of lang preference count
+ggplot(filtered_df, aes(x = lang)) +
+  geom_bar(fill = "skyblue") +
+  labs(title = "Programming Language Preferences", x = "Language", y = "Count") +
+  theme_minimal()
+```
+
+The first part of this question that we wanted to answer was "How does a students' programming language preference (Python vs. R vs. no preference) play a part in what domains and areas they are interested in?" To begin, we made a simple bar chart displaying the count for each language, which shows that Python is the most popular among students, followed by having no preference, and then R. We do have to keep in mind moving forward that there is less data for the students who prefer R.
+
+```{r}
+# Count of domain 
+filtered_df <- filtered_df %>%
+  mutate(domain_count = str_count(dom.y, ",") + 1)
+
+# Average number of domain interests by programming language
+average_domains <- filtered_df %>%
+  group_by(lang) %>%
+  summarise(avg_domain_count = mean(domain_count, na.rm = TRUE))
+
+# Box plot
+ggplot(filtered_df, aes(x = lang, y = domain_count, fill = lang)) +
+  geom_boxplot() +
+  labs(title = "Programming Language Preferences and Domain Interests",
+       x = "Programming Language Preference",
+       y = "Number of Domain Interests") +
+  theme_minimal() +
+  theme(legend.position = "none") + 
+  scale_fill_brewer(palette = "Set1")
+
+# Barplot 
+ggplot(average_domains, aes(x = lang, y = avg_domain_count, fill = lang)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Average Number of Domain Interests by Programming Language Preference",
+       x = "Programming Language Preference",
+       y = "Average Number of Domain Interests") +
+  theme_minimal() +
+  theme(legend.position = "none") + 
+  scale_fill_brewer(palette = "Set1")
+```
+
+Next, we wanted to see if this language preference would have any influence on what domains they are interested in, with some examples of the domains being environmental science, technology, or biology. We created some more visualizations that tell us that in general, all three language preferences are interested in about the same average number of domains (approximately 4.5), with Python preferring students having slightly more domains of interest. We also created a box plot which shows that the students who had no preference in programming language had a larger spread across the number of domains they were interested in, whereas most of the Python and R students said they were interested in around 4.5 to 5 domains, with a few students falling outside this average who preferred Python.
+
+```{r}
+# Count of areas
+filtered_df <- filtered_df %>%
+  mutate(area_count = str_count(area, ",") + 1)  
+
+# Average number of area interests by programming language
+average_areas <- filtered_df %>%
+  group_by(lang) %>%
+  summarise(avg_area_count = mean(area_count, na.rm = TRUE)) 
+
+# Box plot
+ggplot(filtered_df, aes(x = lang, y = area_count, fill = lang)) +
+  geom_boxplot() +
+  labs(title = "Programming Language Preferences and Areas of Interest",
+       x = "Programming Language Preference",
+       y = "Number of Areas of Interest") +
+  theme_minimal() +
+  theme(legend.position = "none") + 
+  scale_fill_brewer(palette = "Set1")
+
+# Barplot
+ggplot(average_areas, aes(x = lang, y = avg_area_count, fill = lang)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Average Number of Areas of Interest by Programming Language Preference",
+       x = "Programming Language Preference",
+       y = "Average Number of Areas of Interest") +
+  theme_minimal() +
+  theme(legend.position = "none") + 
+  scale_fill_brewer(palette = "Set1")
+```
+
+We performed the same exploratory visualizations on the different areas students could be interested in, which were topics like image classification, data engineering, or natural language processing for example. For the bar chart that displays the average number of areas of interest for each programming language preference, it tells us similar information to the domains bar chart: the average number is approximately the same across the three languages, but Python-preferring students have slightly more areas of interest. The next visualization tells us that this time, no preference students and Python students have a much larger range than the R students with the number of areas they are interested in, which means that some of these students have lots of areas of interest and some don't have many, but the range for R students is much smaller, potentially because they have less data.
+
+```{r}
+summary_table <- interest %>%
+  mutate(dom = strsplit(as.character(dom), ", ")) %>%
+  unnest(dom) %>%
+  group_by(dom, lang) %>%
+  summarise(count = n(), .groups = 'drop')
+
+# Top 7 domains
+top_domains <- summary_table %>%
+  group_by(dom) %>%
+  summarise(total_count = sum(count)) %>%
+  top_n(7, total_count) %>%
+  pull(dom)
+
+# Only top domains and languages
+filtered_summary <- summary_table %>%
+  filter(dom %in% top_domains & lang %in% filtered_df$lang)
+
+# Bar chart
+ggplot(filtered_summary, aes(x = reorder(dom, -count), y = count, fill = lang)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(x = "Domain", y = "Count", title = "Top Programming Language Preferences by Domain") +
+  theme_minimal() +
+  scale_fill_brewer(palette = "Set1") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+Next, we took the top seven most popular domains and looked at the distribution of the programming language preferences for each of those. This chart tells us that among the top five most popular domains, Python is the most preferred, with it being significantly preferred for the top three domains. The sixth and seventh most popular domains have no preference in programming language as their most preferred language, which could mean that the less popular domains were preferred by students who had no preference in programming language. This also makes sense because the students who had a certain preference in programming language might have also known exactly which domains they were interested in, tying into our box plot again which showed that the range for Python and R students was much smaller than the no preference students. If a student tends to not have a preference for programming language, then there will also probably be more variety in the amount of domains they are interested in because they might not have an exact idea of what they want to do yet.
+
+```{r}
+summary_table <- interest %>%
+  mutate(area = strsplit(as.character(area), ", ")) %>%   # Change dom to area
+  unnest(area) %>%
+  group_by(area, lang) %>%
+  summarise(count = n(), .groups = 'drop')
+
+# Top 7 areas
+top_areas <- summary_table %>%
+  group_by(area) %>%
+  summarise(total_count = sum(count)) %>%
+  top_n(7, total_count) %>%
+  pull(area)
+
+# Only top domains and languages
+filtered_summary <- summary_table %>%
+  filter(area %in% top_areas & lang %in% filtered_df$lang)
+
+# Bar chart
+ggplot(filtered_summary, aes(x = reorder(area, -count), y = count, fill = lang)) +   # Change dom to area
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(x = "Area", y = "Count", title = "Top Programming Language Preferences by Area") +   # Update axis labels
+  theme_minimal() +
+  scale_fill_brewer(palette = "Set1") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+This visualization is the same as the previous one, but this time looking at the students interests in different areas. This one similarly shows that Python is the preferred choice for the top five areas, and then Python and no preference are equal for the sixth most popular area. For the areas of interest, even though Python is still the most popular, the lead between Python and no preference is much smaller than it was with the domains, which is also reflected in the distributions of the box plots.
+
+```{r}
+# Select domain column
+merged_df <- merged_df %>%
+  select(-c(11:45)) %>%  
+  rename(dom = dom.y)  
+
+summary_table <- merged_df %>%
+  mutate(dom = strsplit(as.character(dom), ", ")) %>%
+  unnest(dom) %>%
+  group_by(dom, rsrch) %>%  # Ensure you use the correct variable name here
+  summarise(count = n(), .groups = 'drop')
+
+# Top 7 domains
+top_domains <- summary_table %>%
+  group_by(dom) %>%
+  summarise(total_count = sum(count)) %>%
+  top_n(7, total_count) %>%
+  pull(dom)
+
+filtered_summary <- summary_table %>%
+  filter(dom %in% top_domains)
+
+# Bar chart
+ggplot(filtered_summary, aes(x = reorder(dom, -count), y = count, fill = as.factor(rsrch))) +  # Use 'rsrch' here
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(x = "Domain", y = "Count", fill = "Research Experience", title = "Top Domains by Research Experience") +
+  theme_minimal() +
+  scale_fill_manual(values = c("red", "blue"), labels = c("No", "Yes")) +  # Adjust colors as needed
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r}
+summary_table <- merged_df %>% 
+  mutate(area = strsplit(as.character(area), ", ")) %>% 
+  unnest(area) %>% 
+  group_by(area, rsrch) %>%  # Ensure you use the correct variable name here
+  summarise(count = n(), .groups = 'drop')
+
+# Top 7 areas
+top_areas <- summary_table %>% 
+  group_by(area) %>% 
+  summarise(total_count = sum(count)) %>% 
+  top_n(7, total_count) %>% 
+  pull(area)
+
+filtered_summary <- summary_table %>% 
+  filter(area %in% top_areas)
+
+# Bar chart
+ggplot(filtered_summary, aes(x = reorder(area, -count), y = count, fill = as.factor(rsrch))) +  # Use 'rsrch' here
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(x = "Area", y = "Count", fill = "Research Experience", title = "Top Areas by Research Experience") +
+  theme_minimal() +
+  scale_fill_manual(values = c("red", "blue"), labels = c("No", "Yes")) +  # Adjust colors as needed
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+Finally, to answer the second part of the question, we were also curious about how prior research experience influenced how many domains and areas students were interested in. When first looking at the domains, there are some that have a larger gap between having research experience and not, like technology, environmental science, public health, and social and political science. On the other hand, domains like software products, neuroscience, and biology have a very slight difference between students who have experience with research. This difference could be due to the fact that those domains are more popular and suitable for research experiments than the others and so they might be more prone to attracting interest from students who have previously done research. On the other hand, when looking at the difference in areas, there doesn't seem to be much of a gap between students with research experience or not across all areas. This could be due to the fact that regardless of having done research before, every student is interested in learning more about these different areas of data science, and none of these are particular to having done research before.
+
+Overall, this question told that for the most part, while students prefer Python, there is a bigger gap between Python and no preference students when it comes to how many domains they are interested in, especially when we look at the top three most popular domains. But for areas, this is less prevalent because regardless of what language you prefer, most students are interested in many different data science areas. A similar observation holds for whether or not students have prior research experience because the domains tend to be more specific towards research or industry, while the areas can be applied to all.

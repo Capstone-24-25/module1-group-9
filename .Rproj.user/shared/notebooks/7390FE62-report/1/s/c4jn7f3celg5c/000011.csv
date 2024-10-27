@@ -1,0 +1,7 @@
+"0","mermaid("""
+"0","    graph LR"
+"0","        A[Data Collection] --> B{Data Preprocessing}"
+"0","        B --> C{Feature Selection}"
+"0","        C --> D{Model Training}"
+"0","        D --> E{Model Evaluation}"
+"0",""")"
