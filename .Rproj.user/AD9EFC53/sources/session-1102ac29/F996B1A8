@@ -1,12 +1,12 @@
 {
-    "id": "18FC5CC5",
+    "id": "F996B1A8",
     "path": "~/PSTAT 197/module1-group-9/results/report.qmd",
     "project_path": "results/report.qmd",
     "type": "quarto_markdown",
     "hash": "0",
     "contents": "",
     "dirty": false,
-    "created": 1729992711274.0,
+    "created": 1729992744859.0,
     "source_on_save": false,
     "relative_order": 4,
     "properties": {
@@ -16,7 +16,7 @@
         "Source": "Source",
         "docOutlineVisible": "0",
         "rmdVisualCollapsedChunks": "",
-        "rmdVisualModeLocation": "2:0",
+        "rmdVisualModeLocation": "1544:722.5",
         "cursorPosition": "50,0",
         "scrollLine": "0"
     },
