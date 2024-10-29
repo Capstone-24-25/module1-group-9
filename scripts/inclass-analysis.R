@@ -8,6 +8,7 @@ library(yardstick)
 setwd("../module1-group-9") 
 getwd()
 load('data/biomarker-clean.RData')
+set.seed(456)
 
 ## MULTIPLE TESTING
 ####################

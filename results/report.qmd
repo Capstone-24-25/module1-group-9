@@ -19,6 +19,14 @@ Use this as a template. Keep the headers and remove all other text. In all, your
 ```{r}
 # load any other packages and read data here
 library(tidyverse)
+library(infer)
+library(randomForest)
+library(tidymodels)
+library(modelr)
+library(yardstick)
+library(pROC)
+library(xgboost)
+library(vip)
 ```
 
 ## Abstract
@@ -47,4 +55,32 @@ Task 3
 
 ### Improved classifier
 
-Task 4
+```{r, echo = FALSE}
+set.seed(456)
+# use only top 10 proteins in a new model and fit to training data 
+panel_recipe <- biomarker_recipe <- recipe(ASD ~ ., data = biomarker_train_bt) %>%
+  step_rm(c("ados", "group")) %>% 
+  update_role(all_of(bt_panel), new_role = "predictor") %>%
+  step_center() %>% 
+  step_scale() 
+
+panel_workflow <- workflow() %>%
+  add_recipe(panel_recipe) %>%
+  add_model(bt_mod)
+
+panel_model <- finalize_workflow(panel_workflow, best_bt)
+panel_model <- fit(panel_model, biomarker_train_bt)
+
+# calculate sensitivity specificity accuracy to benchmark
+multi_metric <- metric_set(sensitivity, specificity, accuracy)
+augment(panel_model, new_data = biomarker_test_bt) %>% 
+  multi_metric(truth = ASD, estimate = .pred_class)
+
+
+```
+
+For our improved classifier, we decided to try using boosted trees as an alternative panel with a hopefully improved classification accuracy. In this method, we used classification xgboost, and split data into training and test data. Additionally, we added folds to the data to help avoid overfitting which in turn can increase our classification accuracy.
+
+After a first iteration of training the data, we then looked at the most important proteins in the model (top 10) and then recreated models/recipes only utilizing these variables. Finally we were able to fit the data again to training data and test accuracy using the training data.
+
+Compared to the in-class analysis, the overall accuracy was much higher, from 0.774 to 0.871. Even our sensitivity improved from 0.812 to 0.824, and our specificity greatly improved from 0.733 to 0.929. It seems that our boosted trees model was an improved classifier across the entire board. Nonetheless, it is still important to point out our sample size of the data is quite small, less than 200 total samples. Because of this, an increase in these estimates should not mean that this model would work better all the time compared to the in class analysis. But rather, it should mean that at these settings and this seed it does seem to perform better compared to the in class analysis

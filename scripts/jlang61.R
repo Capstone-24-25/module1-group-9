@@ -9,7 +9,10 @@ library(xgboost)
 library(vip)
 setwd("../module1-group-9") 
 load('data/biomarker-clean.RData')
-set.seed(200)
+set.seed(456)
+# 0.71 200 
+# 0.581 123
+# 0.613 100
 
 ## BOOSTED TREES
 #############################
