@@ -4,6 +4,7 @@ library(randomForest)
 library(tidymodels)
 library(modelr)
 library(yardstick)
+setwd("~/code/pstat197a/module1-group-9") 
 load('data/biomarker-clean.RData')
 
 ## MULTIPLE TESTING
@@ -102,3 +103,5 @@ testing(biomarker_split) %>%
   class_metrics(estimate = est,
               truth = tr_c, pred,
               event_level = 'second')
+
+
