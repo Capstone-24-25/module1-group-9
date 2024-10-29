@@ -5,6 +5,8 @@ library(tidymodels)
 library(modelr)
 library(yardstick)
 load('data/biomarker-clean.RData')
+set.seed(456)
+
 
 ## MULTIPLE TESTING
 ####################
