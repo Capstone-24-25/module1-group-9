@@ -10,8 +10,10 @@ library(vip)
 setwd("../module1-group-9") 
 load('data/biomarker-clean.RData')
 set.seed(200)
+
 ## BOOSTED TREES
 #############################
+
 # modifying group into 1 and 0 
 biomarker_bt <- biomarker_clean %>% 
   mutate(ASD = as.factor(group == 'ASD'))
@@ -68,16 +70,18 @@ final_bt_model %>% extract_fit_parsnip() %>%
 
 bt_panel <- final_bt_model %>% 
   extract_fit_parsnip() %>% 
-  vip::vi() %>%                 # Get variable importance scores
-  arrange(desc(Importance)) %>%  # Sort by importance               # Select top 10
+  vip::vi() %>%               
+  arrange(desc(Importance)) %>%  
   pull(Variable) %>% 
   head(10)
   
+# check the top 10 proteins
 bt_panel
 
+# use only top 10 proteins in a new model and fit to training data 
 panel_recipe <- biomarker_recipe <- recipe(ASD ~ ., data = biomarker_train_bt) %>%
   step_rm(c("ados", "group")) %>% 
-  step_select(bt_panel) %>% 
+  update_role(all_of(bt_panel), new_role = "predictor") %>%
   step_center() %>% 
   step_scale() 
 
@@ -88,6 +92,7 @@ panel_workflow <- workflow() %>%
 panel_model <- finalize_workflow(panel_workflow, best_bt)
 panel_model <- fit(panel_model, biomarker_train_bt)
 
+# calculate sensitivity specificity accuracy to benchmark
 multi_metric <- metric_set(sensitivity, specificity, accuracy)
 augment(panel_model, new_data = biomarker_test_bt) %>% 
   multi_metric(truth = ASD, estimate = .pred_class)
