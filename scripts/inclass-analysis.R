@@ -4,7 +4,9 @@ library(randomForest)
 library(tidymodels)
 library(modelr)
 library(yardstick)
-setwd("~/code/pstat197a/module1-group-9") 
+
+setwd("../module1-group-9") 
+getwd()
 load('data/biomarker-clean.RData')
 
 ## MULTIPLE TESTING
