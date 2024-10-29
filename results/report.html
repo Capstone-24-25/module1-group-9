@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.433">
+<meta name="generator" content="quarto-1.2.335">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="List names here">
-<meta name="dcterms.date" content="2023-10-27">
+<meta name="author" content="Rebecca Chang,">
+<meta name="dcterms.date" content="2024-10-27">
 
 <title>Biomarkers of ASD</title>
 <style>
@@ -19,7 +19,7 @@ div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
   width: 0.8em;
-  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  margin: 0 0.8em 0.2em -1.6em;
   vertical-align: middle;
 }
 </style>
@@ -35,6 +35,14 @@ ul.task-list li input[type="checkbox"] {
 <script src="report_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="report_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="report_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="report_files/libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<script src="report_files/libs/d3-3.3.8/d3.min.js"></script>
+<script src="report_files/libs/dagre-0.4.0/dagre-d3.min.js"></script>
+<link href="report_files/libs/mermaid-0.3.0/dist/mermaid.css" rel="stylesheet">
+<script src="report_files/libs/mermaid-0.3.0/dist/mermaid.slim.min.js"></script>
+<link href="report_files/libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
+<script src="report_files/libs/chromatography-0.1/chromatography.js"></script>
+<script src="report_files/libs/DiagrammeR-binding-1.0.11/DiagrammeR.js"></script>
 
 
 </head>
@@ -48,7 +56,6 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Biomarkers of ASD</h1>
-<p class="subtitle lead">If you want a subtitle put it here</p>
 </div>
 
 
@@ -58,14 +65,14 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>List names here </p>
+             <p>Rebecca Chang, </p>
           </div>
   </div>
     
     <div>
     <div class="quarto-title-meta-heading">Updated</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">October 27, 2023</p>
+      <p class="date">October 27, 2024</p>
     </div>
   </div>
   
@@ -75,33 +82,98 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<p>Use this as a template. Keep the headers and remove all other text. In all, your report can be quite short. When it is complete, render and then push changes to your team repository.</p>
+<div class="cell" data-hash="report_cache/html/unnamed-chunk-1_bbf3519c8fc6a569aeacc9561db5e66a">
+
+</div>
 <section id="abstract" class="level2">
 <h2 class="anchored" data-anchor-id="abstract">Abstract</h2>
 <p>Write a brief one-paragraph abstract that describes the contents of your write-up.</p>
 </section>
 <section id="dataset" class="level2">
 <h2 class="anchored" data-anchor-id="dataset">Dataset</h2>
-<p>Write a brief data description, including: how data were obtained; sample characteristics; variables measured; and data preprocessing. This can be largely based on the source paper and should not exceed 1-2 paragraphs.</p>
+<p>The data for this study were obtained from a cohort of 154 male pediatric subjects, including 76 with Autism Spectrum Disorder (ASD) and 78 typically developing (TD) boys. Serum samples were collected and analyzed using the SomaLogic SOMAScan platform, which measures the levels of 1,317 proteins. After quality control, 1,125 proteins were analyzed. The primary variables measured in this study include demographic information such as age, ethnicity, and co-morbid conditions. Other variables include the Autism Diagnostic Observation Schedule (ADOS) scores for ASD severity based on clinical assessment. Data preprocessing involved normalization and outlier handling. The protein abundance data were log10 transformed and z-transformed. Outliers were clipped to a specific range to mitigate their impact on analysis.</p>
 </section>
 <section id="summary-of-published-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="summary-of-published-analysis">Summary of published analysis</h2>
-<p>Summarize the methodology of the paper in 1-3 paragraphs. You need not explain the methods in depth as we did in class; just indicate what methods were used and how they were combined. If possible, include a diagram that depicts the methodological design. (Quarto has support for <a href="https://quarto.org/docs/authoring/diagrams.html">GraphViz and Mermaid flowcharts</a>.) Provide key results: the proteins selected for the classifier and the estimated accuracy.</p>
+<p>The study employed a multi-step approach to identify potential biomarkers for autism spectrum disorder (ASD). After the data was collected and preprocessed, a combination of three feature selection methods was used to identify a subset of proteins with the highest predictive power for ASD. These methods included random forest, t-tests, and correlation analysis with ADOS scores. By combining the top-ranked proteins from each method, a core set of 5 proteins was identified.</p>
+<p>Finally, a logistic regression model was trained on the selected proteins to predict ASD status. The model’s performance was evaluated using the area under the curve (AUC) metric. The optimal panel of 9 proteins, including the 5 core proteins and 4 additional proteins, achieved an AUC of 0.86, indicating high accuracy in distinguishing between ASD and TD cases.</p>
+<div class="cell" data-hash="report_cache/html/unnamed-chunk-2_8906cb264f1f67654d9379feab03a66b">
+<div class="cell-output-display">
+<div class="DiagrammeR html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-4b33da967d9a5344dd4b" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-4b33da967d9a5344dd4b">{"x":{"diagram":"\n    graph LR\n        A[Data Collection] --> B{Data Preprocessing}\n        B --> C{Feature Selection}\n        C --> D{Model Training}\n        D --> E{Model Evaluation}\n"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
 </section>
 <section id="findings" class="level2">
 <h2 class="anchored" data-anchor-id="findings">Findings</h2>
 <p>Summarize your findings here. I’ve included some subheaders in a way that seems natural to me; you can structure this section however you like.</p>
 <section id="impact-of-preprocessing-and-outliers" class="level3">
 <h3 class="anchored" data-anchor-id="impact-of-preprocessing-and-outliers">Impact of preprocessing and outliers</h3>
-<p>Tasks 1-2</p>
+<section id="question-1" class="level4">
+<h4 class="anchored" data-anchor-id="question-1">Question 1</h4>
+<ol type="1">
+<li><p>The reason for log-transforming the protein levels in <code>biomarker-raw.csv</code> is likely to reduce skewness as protein levels often follow a skewed or non-normal distribution as seen in the histograms for a sample of proteins such as PACAP-27, TS, and LYNB. Protein levels can also have varying scales of measurement, which can lead to heteroscedasticity or non-constant variance. This can lead to issues with statistical analyses that assume normality. Log-transformation can help stabilize the variance which can in turn improve overall model performance.</p>
+<div class="cell" data-hash="report_cache/html/unnamed-chunk-3_a2b0dfe8760fc33581d1adee15588ef6">
+<div class="cell-output-display">
+<p><img src="report_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
+</div>
+</div></li>
+</ol>
+</section>
+<section id="question-2" class="level4">
+<h4 class="anchored" data-anchor-id="question-2">Question 2</h4>
+</section>
 </section>
 <section id="methodlogical-variations" class="level3">
 <h3 class="anchored" data-anchor-id="methodlogical-variations">Methodlogical variations</h3>
-<p>Task 3</p>
+<section id="question-3" class="level4">
+<h4 class="anchored" data-anchor-id="question-3">Question 3</h4>
+<p>Original</p>
+<div class="cell" data-hash="report_cache/html/unnamed-chunk-4_61c9a16fb0236709980fd153221b1a20">
+<div class="cell-output cell-output-stdout">
+<pre><code>    ASD TD class.error
+ASD  48 28   0.3684211
+TD   17 61   0.2179487</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+  .metric     .estimator .estimate
+  &lt;chr&gt;       &lt;chr&gt;          &lt;dbl&gt;
+1 sensitivity binary         0.875
+2 specificity binary         0.8  
+3 accuracy    binary         0.839
+4 roc_auc     binary         0.908</code></pre>
+</div>
+</div>
+<p>Modification 1: Training Partition</p>
+<div class="cell" data-hash="report_cache/html/unnamed-chunk-5_e5ca671be3e725de5504cca1e5b42e5b">
+<div class="cell-output cell-output-stdout">
+<pre><code>    ASD TD class.error
+ASD  35 25   0.4166667
+TD   15 48   0.2380952</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 3
+  .metric     .estimator .estimate
+  &lt;chr&gt;       &lt;chr&gt;          &lt;dbl&gt;
+1 sensitivity binary         0.688
+2 specificity binary         0.733
+3 accuracy    binary         0.710
+4 roc_auc     binary         0.85 </code></pre>
+</div>
+</div>
+<p>For this modification, proteins were selected by first training the data on the training group before testing the accuracy of the model using the testing group.</p>
+<p>With this modification, each metric used to evaluate the accuracy of our classifier was lower. The ROC AUC decreased from 0.908 to 0.85. This indicates that this model has worse discriminatory power in distinguishing between the two classes. Additionally, before, there was a sensitivity of 0.875 and specificity of 0.8. However, this model achieved a sensitivity of 0.688 and a specificity of 0.733. This model had a much lower sensitivity, indicating that it is worse at identifying true positive cases (correctly identifying individuals with ASD) and also has a higher false positive rate.</p>
+<p>Therefore, partitioning the data before analysis did not seem to improve results as the modification yield less data to be trained on.</p>
+<p>Modification 2:</p>
+<p>Modification 3:</p>
+</section>
 </section>
 <section id="improved-classifier" class="level3">
 <h3 class="anchored" data-anchor-id="improved-classifier">Improved classifier</h3>
-<p>Task 4</p>
+<section id="question-4" class="level4">
+<h4 class="anchored" data-anchor-id="question-4">Question 4</h4>
+</section>
 </section>
 </section>
 
@@ -134,23 +206,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     icon: icon
   };
   anchorJS.add('.anchored');
-  const isCodeAnnotation = (el) => {
-    for (const clz of el.classList) {
-      if (clz.startsWith('code-annotation-')) {                     
-        return true;
-      }
-    }
-    return false;
-  }
   const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
+    target: function(trigger) {
+      return trigger.previousElementSibling;
     }
   });
   clipboard.on('success', function(e) {
@@ -215,92 +273,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
-      let selectedAnnoteEl;
-      const selectorForAnnotation = ( cell, annotation) => {
-        let cellAttr = 'data-code-cell="' + cell + '"';
-        let lineAttr = 'data-code-annotation="' +  annotation + '"';
-        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
-        return selector;
-      }
-      const selectCodeLines = (annoteEl) => {
-        const doc = window.document;
-        const targetCell = annoteEl.getAttribute("data-target-cell");
-        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
-        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
-        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
-        const lineIds = lines.map((line) => {
-          return targetCell + "-" + line;
-        })
-        let top = null;
-        let height = null;
-        let parent = null;
-        if (lineIds.length > 0) {
-            //compute the position of the single el (top and bottom and make a div)
-            const el = window.document.getElementById(lineIds[0]);
-            top = el.offsetTop;
-            height = el.offsetHeight;
-            parent = el.parentElement.parentElement;
-          if (lineIds.length > 1) {
-            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-            height = bottom - top;
-          }
-          if (top !== null && height !== null && parent !== null) {
-            // cook up a div (if necessary) and position it 
-            let div = window.document.getElementById("code-annotation-line-highlight");
-            if (div === null) {
-              div = window.document.createElement("div");
-              div.setAttribute("id", "code-annotation-line-highlight");
-              div.style.position = 'absolute';
-              parent.appendChild(div);
-            }
-            div.style.top = top - 2 + "px";
-            div.style.height = height + 4 + "px";
-            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-            if (gutterDiv === null) {
-              gutterDiv = window.document.createElement("div");
-              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-              gutterDiv.style.position = 'absolute';
-              const codeCell = window.document.getElementById(targetCell);
-              const gutter = codeCell.querySelector('.code-annotation-gutter');
-              gutter.appendChild(gutterDiv);
-            }
-            gutterDiv.style.top = top - 2 + "px";
-            gutterDiv.style.height = height + 4 + "px";
-          }
-          selectedAnnoteEl = annoteEl;
-        }
-      };
-      const unselectCodeLines = () => {
-        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
-        elementsIds.forEach((elId) => {
-          const div = window.document.getElementById(elId);
-          if (div) {
-            div.remove();
-          }
-        });
-        selectedAnnoteEl = undefined;
-      };
-      // Attach click handler to the DT
-      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
-      for (const annoteDlNode of annoteDls) {
-        annoteDlNode.addEventListener('click', (event) => {
-          const clickedEl = event.target;
-          if (clickedEl !== selectedAnnoteEl) {
-            unselectCodeLines();
-            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
-            if (activeEl) {
-              activeEl.classList.remove('code-annotation-active');
-            }
-            selectCodeLines(clickedEl);
-            clickedEl.classList.add('code-annotation-active');
-          } else {
-            // Unselect the line
-            unselectCodeLines();
-            clickedEl.classList.remove('code-annotation-active');
-          }
-        });
-      }
   const findCites = (el) => {
     const parentEl = el.parentElement;
     if (parentEl) {
