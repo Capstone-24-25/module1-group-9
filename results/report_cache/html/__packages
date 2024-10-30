@@ -25,3 +25,6 @@ workflowsets
 yardstick
 modelr
 knitr
+pROC
+xgboost
+vip
