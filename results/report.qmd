@@ -34,7 +34,7 @@ library(vip)
 
 ## Abstract
 
-Write a brief one-paragraph abstract that describes the contents of your write-up.
+Hewitson et. al. (2021) measured the levels of 1,317 proteins in typically developing boys (TD) and boys with Autism Spectrum Disorder (ASD) and performed a multi-pronged analysis to construct model to predict whether a subject has ASD based on a panel of optimal proteins. In this analysis, we examine the steps undertaken in the original analysis and investigate the consequences of making specific modifications to the analysis. Additionally, we construct an improved model using boosted trees to achieve a higher accuracy than the original analysis.
 
 ## Dataset
 
@@ -238,7 +238,7 @@ From this plot, we do see that it is indeed the case that the TD group has a hig
 
 #### Question 3
 
-##### Original
+##### Original Analysis
 
 ```{r}
 ## MULTIPLE TESTING
