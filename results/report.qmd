@@ -886,7 +886,8 @@ testing(biomarker_split) %>%
                 event_level = 'second')
 ```
 
-By comparing the result with the original one, we can find that this modificition get a lower sensiticity and a higher specificity, which means it is better at identifing people with ASD and worse at distinguishing healthy people. Moreover, by modifing the intersection method, the accuracy remains the same but the roc_auc becomes higher. It means that this modificition makes the model performs better than before.
+By comparing the result with the original one, we can find that this modificition get a lower sensiticity and a higher specificity, which means it is better at identifing people with ASD and worse at distinguishing healthy people. Moreover, by modifing the intersection method, the accuracy remains the same but the roc_auc becomes higher. It means that this modificition 
+makes the model performs better than before.
 
 ### Improved classifier
 
